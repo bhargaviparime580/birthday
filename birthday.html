@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate PRO Birthday Surprise</title>
+<style>
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: radial-gradient(circle,#ff758c,#ff7eb3);
+  font-family:'Segoe UI',sans-serif;
+  overflow:hidden;
+}/* LOCK SCREEN */ #lock { position:absolute; background:white; padding:30px; border-radius:20px; text-align:center; z-index:5; }
+
+input { padding:10px; border-radius:10px; border:1px solid #ccc; }
+
+/* CARD */ .card-container { perspective:1000px; display:none; }
+
+.card { width:330px; height:500px; transform-style:preserve-3d; transition:1s;text-align: center; }
+
+.card.flipped { transform:rotateY(180deg); }
+
+.side { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:20px; background:white; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; }
+
+.back { transform:rotateY(180deg); }
+
+button { padding:10px 20px; border:none; border-radius:20px; background:#ff4e50; color:white; cursor:pointer; }
+
+#photo, #surpriseImage {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin: 15px auto;
+  display: block;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.side.back {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+/* HEARTS */ .heart { position:absolute; color:red; animation:float 5s linear infinite; }
+
+@keyframes float { from{transform:translateY(100vh);opacity:1} to{transform:translateY(-10vh);opacity:0} }
+
+canvas { position:absolute; top:0; left:0; }
+
+</style>
+</head>
+<body><!-- LOCK --><div id="lock">
+  <h2>Enter Secret Code ❤️</h2>
+  <input id="pass" placeholder="Enter code">
+  <br><br>
+  <button onclick="unlock()">Open Gift 🎁</button>
+</div><!-- MUSIC --><audio id="music" loop>
+  <source src="the_mountain-happy-birthday-508020.mp3" type="audio/mpeg">
+</audio>
+<canvas id="fireworks"></canvas>
+
+<div class="card-container" id="main">
+  <div class="card" id="card"><div class="side front">
+  <h1>💖 Happy Birthday Nanna💖<br>
+  <h3>You make my world beautiful 🌍✨</h3><br>
+  <h3>Stay with me forever ❤️</h3></h1>
+  <p id="name"></p>
+  <button onclick="flipCard()">Open 💌</button>
+</div>
+
+<div class="side back">
+  <h2>Happy Birthday Nanna❤️ You are my world 🌍</h2>
+   <p>"This day is the most special for me,because it gave me you -- 
+    the one who made my life truly happy."
+  </p>
+<img id="photo" src="pic1.jpeg">
+ 
+
+     <img id="surpriseImage" src="pic6.jpeg" style="display: none;">
+
+ <button id="nextBtn" onclick="nextPhoto()">Next Photo 📷</button>
+
+<button id="surpriseBtn" onclick="showSurprise()" style="display:none;">
+  🎁 Click for Surprise
+</button>
+
+<p id="surpriseText" style="display:none; margin-top:10px;">
+  💖 You are my happiness forever ❤️✨<br>
+  I’m the luckiest person because I have you ❤️
+  Life feels perfect with you💕<br>
+  You + Me = Forever ❤️ Thank you for everything Nanna!<br>
+    Love you so much ra Nanna💖
+
+
+</p>
+</div>
+
+  </div>
+</div><script>
+
+function unlock(){
+  let val=document.getElementById('pass').value;
+  if(val==="Nanna"){
+    document.getElementById('lock').style.display='none';
+    document.getElementById('main').style.display='block';
+    document.getElementById('music').play();
+  } else {
+    alert("Wrong code 😅");
+  }
+}
+
+function flipCard(){
+  document.getElementById('card').classList.toggle('flipped');
+}
+
+// Name typing
+let text="click the open button bangaram ❤️";
+let i=0;
+function type(){
+  if(i<text.length){
+    document.getElementById('name').innerHTML+=text[i];
+    i++;setTimeout(type,100);
+  }
+}
+type();
+
+// Fireworks
+let canvas=document.getElementById('fireworks');
+let ctx=canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
+let particles=[];
+
+function fire(){
+  for(let i=0;i<50;i++){
+    particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*5,vy:(Math.random()-0.5)*5,life:100});
+  }
+}
+
+function showSurprise() {
+  // Hide normal photo
+  document.getElementById("photo").style.display = "none";
+
+  // Show surprise image
+  document.getElementById("surpriseImage").style.display = "block";
+
+  // Show message
+  document.getElementById("surpriseText").style.display = "block";
+
+  // Hide surprise button
+  document.getElementById("surpriseBtn").style.display = "none";
+}
+
+function update(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    p.x+=p.vx;p.y+=p.vy;p.life--;
+    ctx.fillStyle='white';ctx.fillRect(p.x,p.y,2,2);
+    if(p.life<=0)particles.splice(i,1);
+  });
+  requestAnimationFrame(update);
+}
+setInterval(fire,1500);update();
+
+// Confetti
+function confetti(){
+  for(let i=0;i<150;i++){
+    let d=document.createElement('div');
+    d.style.position='absolute';
+    d.style.width='6px';
+    d.style.height='6px';
+    d.style.background='white';
+    d.style.left=Math.random()*innerWidth+'px';
+    d.style.top=Math.random()*innerHeight+'px';
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),2000);
+  }
+}
+
+// Floating hearts
+setInterval(()=>{
+  let h=document.createElement('div');
+  h.className='heart';
+  h.innerHTML='❤️';
+  h.style.left=Math.random()*100+'vw';
+  h.style.fontSize=Math.random()*20+10+'px';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),5000);
+},300);
+
+let photos = ["pic1.jpeg", "pic2.jpeg", "pic3.jpeg", "pic4.jpeg","pic5.jpeg","pic7.jpeg"];
+let index = 0;
+
+
+
+function nextPhoto() {
+  index++;
+
+  // If still photos left → show next photo
+  if (index < photos.length) {
+    document.getElementById("photo").src = photos[index];
+  } 
+  // After last photo → show surprise button
+  else {
+    document.getElementById("photo").style.display = "none";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("surpriseBtn").style.display = "inline-block";
+  }
+}
+
+function showSurprise() {
+  document.getElementById("surpriseImage").style.display = "block";
+  document.getElementById("surpriseText").style.display = "block";
+
+  document.getElementById("surpriseBtn").style.display="none";
+}
+
+</script></body>
+</html>
